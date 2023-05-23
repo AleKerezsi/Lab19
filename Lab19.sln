@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{431CDFC8-8B63-42E2-8F7E-DF5AB6C86747}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab19Console", "Lab19Console\Lab19Console.csproj", "{E224DBCF-B566-4954-8951-5C75B936AB7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab19WebApi", "Lab19WebApi\Lab19WebApi.csproj", "{995B58D2-2A02-4292-B989-27887A102C8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{431CDFC8-8B63-42E2-8F7E-DF5AB6C86747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{431CDFC8-8B63-42E2-8F7E-DF5AB6C86747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{431CDFC8-8B63-42E2-8F7E-DF5AB6C86747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{431CDFC8-8B63-42E2-8F7E-DF5AB6C86747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E224DBCF-B566-4954-8951-5C75B936AB7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E224DBCF-B566-4954-8951-5C75B936AB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E224DBCF-B566-4954-8951-5C75B936AB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E224DBCF-B566-4954-8951-5C75B936AB7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{995B58D2-2A02-4292-B989-27887A102C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{995B58D2-2A02-4292-B989-27887A102C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{995B58D2-2A02-4292-B989-27887A102C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{995B58D2-2A02-4292-B989-27887A102C8A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {983A0002-5D72-44E7-8726-A86BB5D3A051}
+	EndGlobalSection
+EndGlobal
