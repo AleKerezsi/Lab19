@@ -11,18 +11,22 @@ namespace Data.DataLayer
     {
         public void Seed()
         {
-            using var carsDbContext = new SchoolDbContext();
+            SeedStudenti(ctx);
 
+        }
+
+        public void SeedStudenti(SchoolDbContext ctx) 
+        {
             var student1 = new Student()
             {
-                Nume="Mihaela",
-                Prenume="Popescu",
-                Varsta=20,
-                Adresa=new Adresa() 
+                Nume = "Mihaela",
+                Prenume = "Popescu",
+                Varsta = 20,
+                Adresa = new Adresa()
                 {
-                    Oras="Cluj-Napoca",
-                    Strada="Plopilor",
-                    Numar=65
+                    Oras = "Cluj-Napoca",
+                    Strada = "Plopilor",
+                    Numar = 65
                 }
             };
 
@@ -78,13 +82,13 @@ namespace Data.DataLayer
                 }
             };
 
-            carsDbContext.Add(student1);
-            carsDbContext.Add(student2);
-            carsDbContext.Add(student3);
-            carsDbContext.Add(student4);
-            carsDbContext.Add(student5);
+            ctx.Add(student1);
+            ctx.Add(student2);
+            ctx.Add(student3);
+            ctx.Add(student4);
+            ctx.Add(student5);
 
-            carsDbContext.SaveChanges();
+            ctx.SaveChanges();
         }
     }
 }

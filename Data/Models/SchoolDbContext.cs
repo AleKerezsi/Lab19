@@ -11,6 +11,8 @@ namespace Data.Models
     {
         public DbSet<Student> Students { get; set; }
         public DbSet<Adresa> Addresses { get; set; }
+        public DbSet<Nota> Note { get; set; }
+        public DbSet<Curs> Cursuri { get; set; }
 
         public SchoolDbContext()
         {

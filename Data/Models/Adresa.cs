@@ -12,5 +12,6 @@ namespace Data.Models
         public string Oras { get; set; }
         public string Strada { get; set; }
         public int Numar { get; set; }
+        public int StudentId { get; set; }
     }
 }
