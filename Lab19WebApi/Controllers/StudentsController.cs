@@ -13,7 +13,7 @@ namespace Lab19WebApi.Controllers
     [ApiController]
     public class StudentsController : Controller
     {
-
+        #region CRUD (Create Read Update Delete) Operations
         /// <summary>
         /// Returneaza toti studentii din baza de date
         /// </summary>
@@ -101,6 +101,102 @@ namespace Lab19WebApi.Controllers
                 return NotFound(studentNotFoundException.Message);
             }
             return Ok();
+        }
+        #endregion
+
+
+        /// <summary>
+        /// Returneaza toate notele unui student
+        /// </summary>
+        /// <returns>OK - Toate notele studentului dat , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
+        [HttpGet("/{studentId}/allGrades")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IEnumerable<NotaExtrasaDinDbDto> GetAllGradesForStudentId(int studentId)
+        {
+            try
+            {
+                return DataLayerSingleton.Instance.ExtrageToateNotelePentruStudentulCuId(studentId).Select(nota => nota.ToDto()).ToList();
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return (IEnumerable<NotaExtrasaDinDbDto>)NotFound(studentNotFoundException.Message);
+            }
+        }
+
+        /// <summary>
+        /// Returneaza toate notele unui student dintr-un curs
+        /// </summary>
+        /// <returns>OK - Toate notele studentului dat , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
+        [HttpGet("/{studentId}/allGrades/{courseId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IEnumerable<NotaExtrasaDinDbDto> GetAllGradesForStudentInCourse(int studentId, int courseId)
+        {
+            try
+            {
+                return DataLayerSingleton.Instance.ExtrageToateNoteleCuStudentIdSiCursId(studentId, courseId).Select(nota => nota.ToDto()).ToList();
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return (IEnumerable<NotaExtrasaDinDbDto>)NotFound(studentNotFoundException.Message);
+            }
+        }
+
+        /// <summary>
+        /// Returneaza toate mediile unui student pentru fiecare curs in care a participat
+        /// </summary>
+        /// <returns>OK - Toate cursurile in care studentul a participat, impreuna cu media notelor acestora , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
+        [HttpGet("/{studentId}/averageGrades")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public Dictionary<string, double> GetAllGradesAveragesForStudent(int studentId)
+        {
+            var averageGrades = new Dictionary<string, double>();
+
+            try
+            {
+                var groupedData = DataLayerSingleton.Instance
+                    .ExtrageNoteStudentGrupatePerCursPentruStudentCuId(studentId)
+                    .SelectMany(data => data).ToList();
+
+                var coursesStudentEnrolledIn = groupedData.DistinctBy(x => x.Curs.Id).ToList();
+
+                foreach (var groupedDataItem in coursesStudentEnrolledIn)
+                {
+                    averageGrades.Add(groupedDataItem.Curs.Nume, ComputeAverageGrade(groupedData, groupedDataItem.Curs.Nume));
+                }
+
+                return averageGrades;
+
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return null;
+            }
+
+        }
+
+        private double ComputeAverageGrade(List<Nota> groupedData, string courseName)
+        {
+            var average = groupedData.Where(data => data.Curs.Nume == courseName).Average(x => x.Valoare);
+            return average;
+        }
+
+        /// <summary>
+        /// Returneaza studentii ordonati crescator dupa medii
+        /// </summary>
+        /// <returns>OK - Toti studentii ordonati dupa medii ascendent </returns>
+        [HttpGet("/studentsByAverageGradeAscending")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentExtrasDinDbDto>))]
+        public IEnumerable<StudentExtrasDinDbDto> GetStudentsByAscendingAverageGrade()
+        {
+
+            var studentiOrdonatiDupaMedie = DataLayerSingleton.Instance
+                .ExtrageStudentiOrdonatiDupaMedieAscendent()
+                .ToList();
+
+            return (IEnumerable<StudentExtrasDinDbDto>) studentiOrdonatiDupaMedie;
         }
     }
 }

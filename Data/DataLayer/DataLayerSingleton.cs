@@ -40,7 +40,7 @@ namespace Data.DataLayer
         public Student GetStudentById(int studentId)
         {
             var studentFoundById = ctx.Students.FirstOrDefault(student => student.Id == studentId);
-            if (studentFoundById != null)
+            if (studentFoundById == null)
             {
                 throw new StudentNotFoundException($"Studentul cu id-ul {studentId} nu a fost gasit.");
             }
@@ -143,8 +143,64 @@ namespace Data.DataLayer
 
         public IEnumerable<Nota> ExtrageToateNotelePentruStudentulCuId(int studentId) 
         {
+            if (!ctx.Students.Any(s => s.Id == studentId))
+            {
+                throw new StudentNotFoundException($"Studentul cu id-ul {studentId} nu a fost gasit.");
+            }
+
             var note = ctx.Note.Where(nota => nota.StudentId == studentId).ToList();
             return note;
+        }
+
+        public IEnumerable<Nota> ExtrageToateNoteleCuStudentIdSiCursId(int studentId, int cursId)
+        {
+            var studentFoundById = ctx.Students.FirstOrDefault(student => student.Id == studentId);
+            if (studentFoundById == null)
+            {
+                throw new StudentNotFoundException($"Studentul cu id-ul {studentId} nu a fost gasit.");
+            }
+
+            if (!ctx.Cursuri.Any(s => s.Id == cursId))
+            {
+                throw new CursNotFoundException($"Cursul cu id-ul {cursId} nu a fost gasit.");
+            }
+
+            var note = ctx.Note.Where(nota => (nota.StudentId == studentId && nota.CursId == cursId)).ToList();
+            return note;
+        }
+
+        public List<IGrouping<Curs,Nota>> ExtrageNoteStudentGrupatePerCursPentruStudentCuId(int studentId)
+        {
+            var studentFoundById = ctx.Students.FirstOrDefault(student => student.Id == studentId);
+            if (studentFoundById == null)
+            {
+                throw new StudentNotFoundException($"Studentul cu id-ul {studentId} nu a fost gasit.");
+            }
+
+            var noteleStudentului = ctx.Note
+                .Where(nota => nota.StudentId == studentFoundById.Id)
+                .Include(nota => nota.Curs)
+                .GroupBy(nota => nota.Curs)
+                .ToList();
+
+            return noteleStudentului;
+        }
+
+        public IEnumerable<Student> ExtrageStudentiOrdonatiDupaMedieAscendent() 
+        {
+            var studenti = ctx.Students.ToList();
+
+            foreach (var student in studenti) 
+            {
+                var noteleStudentului = ctx.Note
+                               .Where(nota => nota.StudentId == student.Id)
+                               .Include(nota => nota.Curs)
+                               .GroupBy(nota => nota.Curs)
+                               .ToList()
+                               .SelectMany(data => data);
+            }
+
+            return null;
         }
 
         #endregion
