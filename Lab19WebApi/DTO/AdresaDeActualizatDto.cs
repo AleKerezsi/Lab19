@@ -2,7 +2,7 @@
 
 namespace Lab19WebApi.DTO
 {
-    public class AddressToUpdateDto
+    public class AdresaDeActualizatDto
     {
         
         [Required(AllowEmptyStrings = false, ErrorMessage = "Trebuie introdusa o strada, campul Strada nu poate fi lasat gol.")]

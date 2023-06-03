@@ -2,7 +2,7 @@
 
 namespace Lab19WebApi.DTO
 {
-    public class StudentToCreateDto
+    public class StudentDeAdaugatDto
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Numele studentului nu poate fi lasat gol !")]
         public string Nume { get; set; }

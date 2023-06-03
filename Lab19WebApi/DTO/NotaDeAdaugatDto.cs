@@ -2,7 +2,7 @@
 
 namespace Lab19WebApi.DTO
 {
-    public class NotaToCreateDto
+    public class NotaDeAdaugatDto
     {
         [Range(1, 10)]
         public int Valoare { get; set; }

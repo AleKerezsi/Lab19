@@ -99,7 +99,7 @@ namespace Data.DataLayer
             return adresaCreata;
         }
 
-        public void DeleteStudent(int studentId)
+        public void StergeStudent(int studentId)
         {
             var student = ctx.Students.FirstOrDefault(s => s.Id == studentId);
 
@@ -115,18 +115,18 @@ namespace Data.DataLayer
         #endregion
 
         #region Functii pentru cursuri
-        public Curs AddCurs(string numeCurs)
+        public Curs AdaugaCurs(string numeCurs)
         {
             var curs = new Curs { Nume = numeCurs };
             ctx.Cursuri.Add(curs);
             ctx.SaveChanges();
             return curs;
         }
-        public List<Curs> GetAllCursuri() => ctx.Cursuri.ToList();
+        public IEnumerable<Curs> GetAllCursuri() => ctx.Cursuri.ToList();
         #endregion
 
         #region Functii pentru note
-        public void AcordaNota(int valoare, int studentId, int cursId)
+        public void NoteazaStudent(int cursId, int studentId, int valoare)
         {
             if (!ctx.Students.Any(s => s.Id == studentId))
             {

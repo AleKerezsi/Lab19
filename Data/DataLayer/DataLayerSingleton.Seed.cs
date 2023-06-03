@@ -12,6 +12,43 @@ namespace Data.DataLayer
         public void Seed()
         {
             SeedStudenti(ctx);
+            SeedCursuri(ctx);
+        }
+
+        private void SeedCursuri(SchoolDbContext ctx)
+        {
+            var curs1 = new Curs()
+            {
+                Nume = "Dezvoltare software in .NET framework"
+            };
+
+            var curs2 = new Curs()
+            {
+                Nume = "Dezvoltare software folosind limbajul Java"
+            };
+
+            var curs3 = new Curs()
+            {
+                Nume = "Istoria informaticii"
+            };
+
+            var curs4 = new Curs()
+            {
+                Nume = "Educatie fizica si sport"
+            };
+
+            var curs5 = new Curs()
+            {
+                Nume = "Limba Engleza"
+            };
+
+            ctx.Add(curs1);
+            ctx.Add(curs2);
+            ctx.Add(curs3);
+            ctx.Add(curs4);
+            ctx.Add(curs5);
+
+            ctx.SaveChanges();
 
         }
 
