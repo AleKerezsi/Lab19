@@ -137,9 +137,16 @@ namespace Data.DataLayer
                 throw new CursNotFoundException($"Cursul cu id-ul {cursId} nu a fost gasit.");
             }
 
-            ctx.Note.Add(new Nota { Valoare = valoare, StudentId = studentId, CursId = cursId });
+            ctx.Note.Add(new Nota { Valoare = valoare, StudentId = studentId, CursId = cursId, OraAcordarii = DateTime.Now });
             ctx.SaveChanges();
         }
+
+        public IEnumerable<Nota> ExtrageToateNotelePentruStudentulCuId(int studentId) 
+        {
+            var note = ctx.Note.Where(nota => nota.StudentId == studentId).ToList();
+            return note;
+        }
+
         #endregion
 
 

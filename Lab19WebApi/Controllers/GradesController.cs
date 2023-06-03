@@ -1,6 +1,7 @@
 ﻿using Data.DataLayer;
 using Data.Exceptii;
 using Lab19WebApi.DTO;
+using Lab19WebApi.Extensii;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lab19WebApi.Controllers
@@ -21,7 +22,7 @@ namespace Lab19WebApi.Controllers
         {
             try
             {
-                DataLayerSingleton.Instance.NoteazaStudent(notaDeAdaugat.Valoare, notaDeAdaugat.StudentId, notaDeAdaugat.CursId);
+                DataLayerSingleton.Instance.NoteazaStudent(notaDeAdaugat.CursId, notaDeAdaugat.StudentId, notaDeAdaugat.Valoare);
                 return Ok();
             }
             catch (StudentNotFoundException studentNotFoundException)
@@ -34,6 +35,24 @@ namespace Lab19WebApi.Controllers
             }
         }
 
-         
+        /// <summary>
+        /// Returneaza toate notele unui student
+        /// </summary>
+        /// <returns>OK - Toate notele studentului dat , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IEnumerable<NotaExtrasaDinDbDto> GetAllGradesForStudentId(int studentId)
+        {
+            try 
+            {
+                return DataLayerSingleton.Instance.ExtrageToateNotelePentruStudentulCuId(studentId).Select(nota => nota.ToDto()).ToList();
+            }
+            catch (StudentNotFoundException studentNotFoundException) 
+            {
+                return (IEnumerable<NotaExtrasaDinDbDto>) NotFound(studentNotFoundException.Message);
+            }
+        }
+
     }
 }
