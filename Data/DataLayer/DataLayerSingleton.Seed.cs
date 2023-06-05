@@ -13,6 +13,52 @@ namespace Data.DataLayer
         {
             SeedStudenti(ctx);
             SeedCursuri(ctx);
+            SeedNote(ctx);
+        }
+
+        private void SeedNote(SchoolDbContext ctx)
+        {
+            var nota1 = new Nota()
+            {
+                StudentId = 2,
+                CursId = 3,
+                Valoare = 10,
+                OraAcordarii = DateTime.Now
+            };
+            var nota2 = new Nota()
+            {
+                StudentId = 3,
+                CursId = 4,
+                Valoare = 10,
+                OraAcordarii = DateTime.Now
+            };
+            var nota3 = new Nota()
+            {
+                StudentId = 4,
+                CursId = 5,
+                Valoare = 9,
+                OraAcordarii = DateTime.Now
+            };
+            var nota4 = new Nota()
+            {
+                StudentId = 2,
+                CursId = 5,
+                Valoare = 9,
+                OraAcordarii = DateTime.Now
+            };
+            var nota5 = new Nota()
+            {
+                StudentId = 4,
+                CursId = 3,
+                Valoare = 8,
+                OraAcordarii = DateTime.Now
+            };
+            ctx.Add(nota1);
+            ctx.Add(nota2);
+            ctx.Add(nota3);
+            ctx.Add(nota4);
+            ctx.Add(nota5);
+            ctx.SaveChanges();
         }
 
         private void SeedCursuri(SchoolDbContext ctx)

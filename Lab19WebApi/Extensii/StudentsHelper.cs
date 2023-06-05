@@ -79,6 +79,7 @@ namespace Lab19WebApi.Extensii
             return new Student
             {
                 Nume = student.Nume,
+                Prenume= student.Prenume,
                 Varsta = student.Varsta
             };
         }
