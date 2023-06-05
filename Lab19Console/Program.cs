@@ -1,3 +1,3 @@
 ﻿using Data.DataLayer;
 
-DataLayerSingleton.Instance.Seed();
+//DataLayerSingleton.Instance.Seed();

@@ -31,12 +31,12 @@ namespace Lab19WebApi.Controllers
         /// </summary>
         /// <param name="id">Id-ul studentului dorit</param>
         /// <returns>Studentul gasit cu informatiile lui </returns>
-        [HttpGet("/id/{id}")]
+        [HttpGet("/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentExtrasDinDbDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 
-        public ActionResult<StudentExtrasDinDbDto> GetStudentById([Range(10, int.MaxValue)] int id)
+        public ActionResult<StudentExtrasDinDbDto> GetStudentById([Range(1, int.MaxValue)] int id)
         {
             try
             {

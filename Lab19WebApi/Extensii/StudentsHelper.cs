@@ -25,7 +25,7 @@ namespace Lab19WebApi.Extensii
                 Prenume = student.Prenume,
                 Varsta = student.Varsta,
                 //incarc si adresa impreuna cu studentul, folosind o metoda de mapare
-                Adresa = student.Adresa.ToDto() 
+                Adresa = student.Adresa?.ToDto() 
             };
         }
 
