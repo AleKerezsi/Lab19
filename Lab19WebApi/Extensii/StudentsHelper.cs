@@ -99,6 +99,7 @@ namespace Lab19WebApi.Extensii
             {
                 Id = student.Id,
                 Nume = student.Nume,
+                Prenume = student.Prenume,
                 Varsta = student.Varsta
             };
         }

@@ -13,7 +13,7 @@ namespace Lab19WebApi.Controllers
         /// <summary>
         /// Adauga un curs nou in baza de date
         /// </summary>
-        /// <param name="cursName">Numele cursului nou</param>
+        /// <param name="cursName">Numele cursului nou. De exemplu "Programare in Typescript"</param>
         [HttpPost()]
         public CursExtrasDinDbDto AddCurs([FromBody] string cursName) => DataLayerSingleton.Instance.AdaugaCurs(cursName).ToDto();
 
