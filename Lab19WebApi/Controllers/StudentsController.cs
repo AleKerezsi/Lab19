@@ -50,6 +50,28 @@ namespace Lab19WebApi.Controllers
         }
 
         /// <summary>
+        /// Returneaza adresa unui student
+        /// </summary>
+        /// <param name="id">Id-ul studentului a carei adresa vrem sa o gasim</param>
+        /// <returns>Adresa studentului </returns>
+        [HttpGet("/api/students/{id}/address")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentExtrasDinDbDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+
+        public ActionResult<AdresaDto> GetAddressByStudentId([Range(1, int.MaxValue)] int id)
+        {
+            try
+            {
+                return Ok(DataLayerSingleton.Instance.GetAddressByStudentId(id).ToDto());
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return BadRequest(studentNotFoundException.Message);
+            }
+        }
+
+        /// <summary>
         /// Creeaza un student nou
         /// </summary>
         /// <param name="studentDeAdaugat">Studentul nou care va fi creat</param>
@@ -185,12 +207,12 @@ namespace Lab19WebApi.Controllers
         }
 
         /// <summary>
-        /// Returneaza studentii ordonati crescator dupa medii
+        /// Returneaza studentii ordonati dupa medii - specificati 'desc' pentru parametrul sortOrder daca doriti descendent, default se face ascendent
         /// </summary>
-        /// <returns>OK - Toti studentii ordonati dupa medii ascendent </returns>
-        [HttpGet("/api/students/studentsByAverageGradeAscending")]
+        /// <returns>OK - Toti studentii ordonati dupa medii </returns>
+        [HttpGet("/api/students/studentsByAverageGrades")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentExtrasDinDbDto>))]
-        public IEnumerable<StudentExtrasDinDbCuMediiDto> GetStudentsByAscendingAverageGrade()
+        public IEnumerable<StudentExtrasDinDbCuMediiDto> GetStudentsByAscendingAverageGrade(string sortOrder = "asc")
         {
             var students = DataLayerSingleton.Instance.GetAllStudents().Select(student => student).ToList();
 
@@ -200,14 +222,14 @@ namespace Lab19WebApi.Controllers
 
             foreach (var student in students) 
             {
+                //ne folosim de codul pe care il avem deja la celalalt endpoint
                 var studentGradesAverages = GetAllGradesAveragesForStudent(student.Id);
 
                 //facem o medie aritmetica aici, desi in mod normal ar trebui sa tinem cont si de creditele cursului si sa facem o medie ponderata ...
                 studentiMedii.Add(student, studentGradesAverages.Sum(nota => nota.Value) / cursuriCount);
             }
 
-            // Order the dictionary pairs by the value (integer)
-            var orderedData = studentiMedii.OrderBy(pair => pair.Value).ToList();
+            var orderedData = (sortOrder == "desc" ? studentiMedii.OrderByDescending(pair => pair.Value).ToList() : studentiMedii.OrderBy(pair => pair.Value).ToList());
 
             var finalData = new List<StudentExtrasDinDbCuMediiDto>();
 

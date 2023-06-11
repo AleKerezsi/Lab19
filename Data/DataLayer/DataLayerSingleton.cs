@@ -46,7 +46,24 @@ namespace Data.DataLayer
             }
             return studentFoundById;
         }
-       
+
+        public Adresa GetAddressByStudentId(int studentId)
+        {
+            var studentFoundById = ctx.Students.FirstOrDefault(student => student.Id == studentId);
+            if (studentFoundById == null)
+            {
+                throw new StudentNotFoundException($"Studentul cu id-ul {studentId} nu a fost gasit.");
+            }
+            
+            else 
+            {
+                if (studentFoundById.Adresa == null)
+                    throw new AdresaNotFoundException($"Studentul cu id-ul {studentId} nu are adresa setata.");
+
+                return studentFoundById.Adresa;
+            }
+        }
+
 
         public Student AdaugaStudent(Student student)
         {
