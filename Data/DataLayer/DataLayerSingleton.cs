@@ -127,6 +127,12 @@ namespace Data.DataLayer
 
             ctx.Students.Remove(student);
 
+            //stergerea studentului implica si stergerea adresei asociate, nu are rost sa o pastram
+            if (student.Adresa != null) 
+            {
+                ctx.Addresses.Remove(student.Adresa);
+            }
+
             ctx.SaveChanges();
         }
         #endregion

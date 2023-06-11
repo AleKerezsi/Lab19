@@ -113,11 +113,11 @@ namespace Lab19WebApi.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteStudent([Range(10, int.MaxValue)] int studentId)
+        public IActionResult DeleteStudent([Range(1, int.MaxValue)] int id)
         {
             try
             {
-                DataLayerSingleton.Instance.StergeStudent(studentId);
+                DataLayerSingleton.Instance.StergeStudent(id);
             }
             catch (StudentNotFoundException studentNotFoundException)
             {
