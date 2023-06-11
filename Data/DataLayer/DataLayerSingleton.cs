@@ -190,15 +190,27 @@ namespace Data.DataLayer
         {
             var studenti = ctx.Students.ToList();
 
+            var studentiNote = new Dictionary<Student, object>();
+
             foreach (var student in studenti) 
             {
-                var noteleStudentului = ctx.Note
-                               .Where(nota => nota.StudentId == student.Id)
-                               .Include(nota => nota.Curs)
-                               .GroupBy(nota => nota.Curs)
-                               .ToList()
-                               .SelectMany(data => data);
+                //var noteleStudentului = ctx.Note.Where(nota => nota.StudentId == student.Id).ToList();
+                //if (noteleStudentului.Count > 0)
+                //{
+
+                //}
+                //else studentiNote.Add(student, null);
             }
+
+            //foreach (var student in studenti) 
+            //{
+            //    var noteleStudentului = ctx.Note
+            //                   .Where(nota => nota.StudentId == student.Id)
+            //                   .Include(nota => nota.Curs)
+            //                   .GroupBy(nota => nota.Curs)
+            //                   .ToList()
+            //                   .SelectMany(data => data);
+            //}
 
             return null;
         }

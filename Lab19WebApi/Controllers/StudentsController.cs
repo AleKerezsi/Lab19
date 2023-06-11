@@ -6,6 +6,7 @@ using Lab19WebApi.Extensii;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Server;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.Xml;
 
 namespace Lab19WebApi.Controllers
 {
@@ -31,7 +32,7 @@ namespace Lab19WebApi.Controllers
         /// </summary>
         /// <param name="id">Id-ul studentului dorit</param>
         /// <returns>Studentul gasit cu informatiile lui </returns>
-        [HttpGet("/{id}")]
+        [HttpGet("/api/students/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentExtrasDinDbDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -109,7 +110,7 @@ namespace Lab19WebApi.Controllers
         /// Returneaza toate notele unui student
         /// </summary>
         /// <returns>OK - Toate notele studentului dat , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
-        [HttpGet("/{studentId}/allGrades")]
+        [HttpGet("/api/students/{studentId}/allGrades")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IEnumerable<NotaExtrasaDinDbDto> GetAllGradesForStudentId(int studentId)
@@ -128,7 +129,7 @@ namespace Lab19WebApi.Controllers
         /// Returneaza toate notele unui student dintr-un curs
         /// </summary>
         /// <returns>OK - Toate notele studentului dat , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
-        [HttpGet("/{studentId}/allGrades/{courseId}")]
+        [HttpGet("/api/students/{studentId}/allGrades/{courseId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IEnumerable<NotaExtrasaDinDbDto> GetAllGradesForStudentInCourse(int studentId, int courseId)
@@ -147,7 +148,7 @@ namespace Lab19WebApi.Controllers
         /// Returneaza toate mediile unui student pentru fiecare curs in care a participat
         /// </summary>
         /// <returns>OK - Toate cursurile in care studentul a participat, impreuna cu media notelor acestora , 404 - Daca nu exista niciun student in db cu id-ul dat </returns>
-        [HttpGet("/{studentId}/averageGrades")]
+        [HttpGet("/api/students/{studentId}/averageGrades")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public Dictionary<string, double> GetAllGradesAveragesForStudent(int studentId)
@@ -187,16 +188,40 @@ namespace Lab19WebApi.Controllers
         /// Returneaza studentii ordonati crescator dupa medii
         /// </summary>
         /// <returns>OK - Toti studentii ordonati dupa medii ascendent </returns>
-        [HttpGet("/studentsByAverageGradeAscending")]
+        [HttpGet("/api/students/studentsByAverageGradeAscending")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentExtrasDinDbDto>))]
-        public IEnumerable<StudentExtrasDinDbDto> GetStudentsByAscendingAverageGrade()
+        public IEnumerable<StudentExtrasDinDbCuMediiDto> GetStudentsByAscendingAverageGrade()
         {
+            var students = DataLayerSingleton.Instance.GetAllStudents().Select(student => student).ToList();
 
-            var studentiOrdonatiDupaMedie = DataLayerSingleton.Instance
-                .ExtrageStudentiOrdonatiDupaMedieAscendent()
-                .ToList();
+            var cursuriCount = DataLayerSingleton.Instance.GetAllCursuri().ToList().Count();
 
-            return (IEnumerable<StudentExtrasDinDbDto>) studentiOrdonatiDupaMedie;
+            var studentiMedii = new Dictionary<Student, double>();
+
+            foreach (var student in students) 
+            {
+                var studentGradesAverages = GetAllGradesAveragesForStudent(student.Id);
+
+                //facem o medie aritmetica aici, desi in mod normal ar trebui sa tinem cont si de creditele cursului si sa facem o medie ponderata ...
+                studentiMedii.Add(student, studentGradesAverages.Sum(nota => nota.Value) / cursuriCount);
+            }
+
+            // Order the dictionary pairs by the value (integer)
+            var orderedData = studentiMedii.OrderBy(pair => pair.Value).ToList();
+
+            var finalData = new List<StudentExtrasDinDbCuMediiDto>();
+
+            foreach(var student in orderedData) 
+            {
+                finalData.Add(new StudentExtrasDinDbCuMediiDto()
+                {
+                    Nume = student.Key.Nume,
+                    Prenume = student.Key.Prenume,
+                    Media = student.Value
+                });
+            }
+
+            return finalData;
         }
     }
 }

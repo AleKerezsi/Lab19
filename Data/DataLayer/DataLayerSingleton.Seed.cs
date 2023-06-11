@@ -13,51 +13,41 @@ namespace Data.DataLayer
         {
             SeedStudenti(ctx);
             SeedCursuri(ctx);
-            SeedNote(ctx);
+            SeedNote(ctx, 3);
         }
 
-        private void SeedNote(SchoolDbContext ctx)
+        private void SeedNote(SchoolDbContext ctx, int noteDeCreat)
         {
-            var nota1 = new Nota()
+
+            var students = ctx.Students.ToList();
+            var courses = ctx.Cursuri.ToList();
+
+            var note = new List<Nota>();
+
+            Random random = new Random();
+
+            foreach (var student in students)
             {
-                StudentId = 2,
-                CursId = 3,
-                Valoare = 10,
-                OraAcordarii = DateTime.Now
-            };
-            var nota2 = new Nota()
-            {
-                StudentId = 3,
-                CursId = 4,
-                Valoare = 10,
-                OraAcordarii = DateTime.Now
-            };
-            var nota3 = new Nota()
-            {
-                StudentId = 4,
-                CursId = 5,
-                Valoare = 9,
-                OraAcordarii = DateTime.Now
-            };
-            var nota4 = new Nota()
-            {
-                StudentId = 2,
-                CursId = 5,
-                Valoare = 9,
-                OraAcordarii = DateTime.Now
-            };
-            var nota5 = new Nota()
-            {
-                StudentId = 4,
-                CursId = 3,
-                Valoare = 8,
-                OraAcordarii = DateTime.Now
-            };
-            ctx.Add(nota1);
-            ctx.Add(nota2);
-            ctx.Add(nota3);
-            ctx.Add(nota4);
-            ctx.Add(nota5);
+                foreach(var course in courses)
+                {
+                    for (int i = 0; i < noteDeCreat; i++)
+                    {
+                        //acordam doar note de trecere, de la 5 la 10, 11 este exclus
+                        int randomGrade = random.Next(5, 11);
+                        note.Add(new Nota
+                        {
+                            Student = student,
+                            StudentId = student.Id,
+                            Curs = course,
+                            CursId = course.Id,
+                            Valoare = randomGrade,
+                            OraAcordarii = DateTime.Now
+                        }); ;
+                    }
+                }
+            }
+
+            ctx.AddRange(note);
             ctx.SaveChanges();
         }
 
