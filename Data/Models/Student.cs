@@ -12,6 +12,7 @@ namespace Data.Models
         public string Nume { get; set; }
         public string Prenume { get; set; }
         public int Varsta { get; set; }
+        public List<Curs> Cursuri { get; set; } = new List<Curs>();
         public Adresa Adresa { get; set; }
     }
 }
