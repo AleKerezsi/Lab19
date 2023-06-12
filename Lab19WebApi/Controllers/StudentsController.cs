@@ -34,7 +34,6 @@ namespace Lab19WebApi.Controllers
         /// <returns>Studentul gasit cu informatiile lui </returns>
         [HttpGet("/api/students/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentExtrasDinDbDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 
         public ActionResult<StudentExtrasDinDbDto> GetStudentById([Range(1, int.MaxValue)] int id)
@@ -45,7 +44,7 @@ namespace Lab19WebApi.Controllers
             }
             catch (StudentNotFoundException studentNotFoundException)
             {
-                return BadRequest(studentNotFoundException.Message);
+                return NotFound(studentNotFoundException.Message);
             }
         }
 
@@ -56,7 +55,6 @@ namespace Lab19WebApi.Controllers
         /// <returns>Adresa studentului </returns>
         [HttpGet("/api/students/{id}/address")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentExtrasDinDbDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 
         public ActionResult<AdresaDto> GetAddressByStudentId([Range(1, int.MaxValue)] int id)
@@ -67,7 +65,7 @@ namespace Lab19WebApi.Controllers
             }
             catch (StudentNotFoundException studentNotFoundException)
             {
-                return BadRequest(studentNotFoundException.Message);
+                return NotFound(studentNotFoundException.Message);
             }
         }
 
@@ -93,7 +91,7 @@ namespace Lab19WebApi.Controllers
         /// <param name="id">Id-ul Adresei care se doreste actualizat</param>
         /// <param name="adresaDeActualizat">DTO-ul asociat cu Adresa unui student care se doreste actualizata</param>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult UpdateStudentAddress([FromRoute] int id, [FromBody] AdresaDeActualizatDto adresaDeActualizat)
         {
@@ -102,7 +100,7 @@ namespace Lab19WebApi.Controllers
             {
                 return Created($"Adresa cu id-ul {id} a fost actualizata, sau creata in cazul in care nu exista, cu succes !", null);
             }
-            return Ok();
+            return NoContent();
         }
 
         /// <summary>
@@ -195,7 +193,7 @@ namespace Lab19WebApi.Controllers
             }
             catch (StudentNotFoundException studentNotFoundException)
             {
-                return null;
+                return NotFound(studentNotFoundException.Message);
             }
 
         }
