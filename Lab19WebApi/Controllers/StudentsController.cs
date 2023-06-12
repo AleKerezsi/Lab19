@@ -171,7 +171,7 @@ namespace Lab19WebApi.Controllers
         [HttpGet("/api/students/{studentId}/averageGrades")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NotaExtrasaDinDbDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public Dictionary<string, double> GetAllGradesAveragesForStudent(int studentId)
+        public ActionResult<Dictionary<string, double>> GetAllGradesAveragesForStudent(int studentId)
         {
             var averageGrades = new Dictionary<string, double>();
 
@@ -195,6 +195,24 @@ namespace Lab19WebApi.Controllers
             {
                 return NotFound(studentNotFoundException.Message);
             }
+        }
+
+        protected Dictionary<string, double> GetAllGradesAveragesForStudentId(int studentId)
+        {
+            var averageGrades = new Dictionary<string, double>();
+
+            var groupedData = DataLayerSingleton.Instance
+                .ExtrageNoteStudentGrupatePerCursPentruStudentCuId(studentId)
+                .SelectMany(data => data).ToList();
+
+            var coursesStudentEnrolledIn = groupedData.DistinctBy(x => x.Curs.Id).ToList();
+
+            foreach (var groupedDataItem in coursesStudentEnrolledIn)
+            {
+                averageGrades.Add(groupedDataItem.Curs.Nume, ComputeAverageGrade(groupedData, groupedDataItem.Curs.Nume));
+            }
+
+            return averageGrades;
 
         }
 
@@ -221,7 +239,7 @@ namespace Lab19WebApi.Controllers
             foreach (var student in students) 
             {
                 //ne folosim de codul pe care il avem deja la celalalt endpoint
-                var studentGradesAverages = GetAllGradesAveragesForStudent(student.Id);
+                var studentGradesAverages = GetAllGradesAveragesForStudentId(student.Id);
 
                 //facem o medie aritmetica aici, desi in mod normal ar trebui sa tinem cont si de creditele cursului si sa facem o medie ponderata ...
                 studentiMedii.Add(student, studentGradesAverages.Sum(nota => nota.Value) / cursuriCount);
